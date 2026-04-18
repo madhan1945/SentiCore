@@ -148,13 +148,6 @@ Open your browser at: **http://127.0.0.1:5000**
 
 ---
 
-## 🖱️ Windows One-Click Launch
-
-Double-click **`run_project.bat`** in the project root.  
-It activates the venv and starts Flask automatically.
-
----
-
 ## 📸 Screenshots
 
 After running the app, open `http://127.0.0.1:5000` to see:
@@ -178,9 +171,4 @@ After running the app, open `http://127.0.0.1:5000` to see:
 | Frontend   | HTML5, CSS3, Bootstrap 5, Vanilla JS|
 | Fonts      | Syne + DM Sans (Google Fonts)       |
 
----
 
-## 👨‍💻 Author
-
-University NLP Deep Learning Project  
-Built with TensorFlow, Keras, Flask, and Bootstrap 5.
