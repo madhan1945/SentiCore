@@ -1,0 +1,12 @@
+﻿venv/
+backend/model.h5
+backend/tokenizer.pkl
+backend/model_accuracy.txt
+__pycache__/
+*.py[cod]
+*.pyo
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log

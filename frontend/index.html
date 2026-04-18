@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SentiCore — Deep Learning Sentiment Analysis</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════  NOISE OVERLAY  ═══════════════════ -->
+  <div class="noise-overlay"></div>
+
+  <!-- ═══════════════════  NAV  ═══════════════════ -->
+  <nav class="sc-nav">
+    <div class="sc-nav__logo">
+      <span class="logo-dot"></span>
+      SentiCore
+    </div>
+    <div class="sc-nav__badge" id="accuracyBadge">
+      <i class="fa-solid fa-microchip"></i>
+      <span id="navAccuracy">Loading…</span>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════  HERO  ═══════════════════ -->
+  <header class="sc-hero">
+    <div class="sc-hero__bg-grid"></div>
+
+    <div class="sc-hero__content container">
+      <div class="sc-hero__eyebrow">
+        <span class="pill pill--teal">Deep Learning</span>
+        <span class="pill pill--dim">LSTM · Bi-directional · IMDb</span>
+      </div>
+
+      <h1 class="sc-hero__title">
+        Decode the<br />
+        <span class="gradient-text">Emotion</span><br />
+        in Every Word
+      </h1>
+
+      <p class="sc-hero__sub">
+        A Bidirectional LSTM neural network trained on 50 000 movie reviews
+        reads your text and tells you how it <em>feels</em>.
+      </p>
+
+      <div class="sc-hero__stats">
+        <div class="stat-chip">
+          <span class="stat-chip__val" id="heroAccuracy">—</span>
+          <span class="stat-chip__label">Model Accuracy</span>
+        </div>
+        <div class="stat-chip">
+          <span class="stat-chip__val">50 K</span>
+          <span class="stat-chip__label">Training Samples</span>
+        </div>
+        <div class="stat-chip">
+          <span class="stat-chip__val">LSTM</span>
+          <span class="stat-chip__label">Architecture</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sc-hero__scroll-hint">
+      <i class="fa-solid fa-chevron-down"></i>
+    </div>
+  </header>
+
+  <!-- ═══════════════════  MAIN ANALYSER  ═══════════════════ -->
+  <main class="sc-main container" id="analyser">
+
+    <!-- ── INPUT CARD ── -->
+    <section class="sc-card sc-card--input fade-up">
+      <div class="sc-card__label">
+        <i class="fa-solid fa-pen-nib"></i> Your Text
+      </div>
+
+      <textarea
+        id="inputText"
+        class="sc-textarea"
+        rows="5"
+        placeholder="Type or paste a sentence, review, or paragraph…"
+        maxlength="2000"
+      ></textarea>
+
+      <div class="sc-input-footer">
+        <span class="char-count"><span id="charCount">0</span> / 2000</span>
+        <button class="sc-btn" id="analyseBtn" onclick="analyseText()">
+          <span class="sc-btn__text">
+            <i class="fa-solid fa-bolt"></i> Analyse Sentiment
+          </span>
+          <span class="sc-btn__loader" style="display:none">
+            <span class="spinner"></span> Analysing…
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ── RESULT CARD ── -->
+    <section class="sc-card sc-result fade-up" id="resultCard" style="display:none">
+      <div class="sc-result__header" id="resultHeader">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="sc-result__body">
+        <div class="sc-result__sentiment" id="resultSentiment"></div>
+
+        <div class="confidence-block">
+          <div class="confidence-block__label">Confidence</div>
+          <div class="confidence-bar-wrap">
+            <div class="confidence-bar" id="confidenceBar"></div>
+          </div>
+          <div class="confidence-block__pct" id="confidencePct"></div>
+        </div>
+
+        <div class="sc-result__quote" id="resultQuote"></div>
+      </div>
+    </section>
+
+    <!-- ── ERROR CARD ── -->
+    <div class="sc-error" id="errorCard" style="display:none">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span id="errorMsg"></span>
+    </div>
+
+    <!-- ── EXAMPLES ── -->
+    <section class="sc-examples fade-up">
+      <h2 class="sc-section-title">
+        <span class="title-line"></span>
+        Try These Examples
+        <span class="title-line"></span>
+      </h2>
+
+      <div class="example-grid" id="exampleGrid">
+        <!-- populated by JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════  HOW IT WORKS  ═══════════════════ -->
+  <section class="sc-pipeline container fade-up">
+    <h2 class="sc-section-title">
+      <span class="title-line"></span>
+      Model Pipeline
+      <span class="title-line"></span>
+    </h2>
+
+    <div class="pipeline-steps">
+      <div class="pipeline-step">
+        <div class="ps-icon"><i class="fa-solid fa-broom"></i></div>
+        <div class="ps-label">Clean</div>
+        <div class="ps-desc">Strip HTML, remove stop-words, normalise</div>
+      </div>
+      <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      <div class="pipeline-step">
+        <div class="ps-icon"><i class="fa-solid fa-tags"></i></div>
+        <div class="ps-label">Tokenise</div>
+        <div class="ps-desc">Map words to integer indices (vocab 20 K)</div>
+      </div>
+      <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      <div class="pipeline-step">
+        <div class="ps-icon"><i class="fa-solid fa-table-columns"></i></div>
+        <div class="ps-label">Pad</div>
+        <div class="ps-desc">Fixed-length sequences of 200 tokens</div>
+      </div>
+      <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      <div class="pipeline-step">
+        <div class="ps-icon"><i class="fa-solid fa-brain"></i></div>
+        <div class="ps-label">LSTM</div>
+        <div class="ps-desc">Bi-directional LSTM captures context</div>
+      </div>
+      <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      <div class="pipeline-step">
+        <div class="ps-icon"><i class="fa-solid fa-chart-pie"></i></div>
+        <div class="ps-label">Predict</div>
+        <div class="ps-desc">Sigmoid output → Positive / Negative</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════  FOOTER  ═══════════════════ -->
+  <footer class="sc-footer">
+    <div class="sc-footer__inner container">
+      <div class="sc-footer__brand">
+        <span class="logo-dot"></span>
+        SentiCore
+      </div>
+      <div class="sc-footer__info">
+        Deep Learning NLP · University Project · TensorFlow / Keras / Flask
+      </div>
+      <div class="sc-footer__api">
+        API endpoint: <code>POST /predict</code>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
