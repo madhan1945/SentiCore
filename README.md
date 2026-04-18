@@ -171,4 +171,8 @@ After running the app, open `http://127.0.0.1:5000` to see:
 | Frontend   | HTML5, CSS3, Bootstrap 5, Vanilla JS|
 | Fonts      | Syne + DM Sans (Google Fonts)       |
 
+---
 
+## 👨‍💻 Author
+
+**Madhan** — [@madhan1945](https://github.com/madhan1945)
